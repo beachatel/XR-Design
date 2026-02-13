@@ -1,2 +1,7 @@
 node_modules
 *.stl
+*.glb
+*.gltf
+*.png
+*.jpg
+*hdr
