@@ -4,6 +4,7 @@ node_modules
 *.gltf
 *.png
 *.jpg
-*hdr
+*.hdr
 *textures
-*DS_Store
+*.DS_Store
+*.pptx
