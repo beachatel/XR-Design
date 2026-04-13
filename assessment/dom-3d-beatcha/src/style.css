@@ -1,0 +1,369 @@
+/* Ensure header is ALWAYS on top of the 3D scene */
+#header {
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+#crazyModeToggle,
+#darkModeToggle {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* The 3D Overlay */
+#crazy-scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100; /* Lower than header */
+  pointer-events: none; /* Let clicks pass through empty space to header */
+  display: none;
+}
+
+#crazy-scene.active {
+  display: block;
+  pointer-events: auto;
+}
+
+#css3d-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to toggle button */
+}
+
+.c3d-card {
+  pointer-events: auto; /* Re-enable clicks for actual project cards */
+  text-decoration: none;
+  color: inherit;
+}
+
+* {
+  font-family: "IBM Plex Mono";
+  overflow-x: hidden;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.indexTitle {
+  display: inline-flex;
+  font-size: 1.25em;
+  height: 1.5em;
+  color: rgb(3, 4, 5);
+  border: none;
+}
+
+.links {
+  display: inline-flex;
+  font-size: 1.25em;
+  float: right;
+  color: rgb(3, 4, 5);
+  border: none;
+}
+
+.socials {
+  width: 100%;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  font-size: 0.8em;
+  border-top: 0.1em solid rgb(3, 4, 5);
+  display: inline-flex;
+  align-items: center;
+}
+
+.email {
+  display: inline-flex;
+}
+
+button#copyToClipboard {
+  background-color: transparent;
+  border: none;
+}
+button#copyToClipboard.hover {
+  text-decoration: underline;
+  color: black;
+}
+
+a#copied {
+  display: none;
+}
+
+#darkModeToggle {
+  background-color: transparent;
+  border: none;
+  color: rgb(3, 4, 5);
+  padding: 0.5em;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+#crazyModeToggle {
+  background-color: transparent;
+  border: none;
+  color: rgb(3, 4, 5);
+  padding: 0.5em;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 0px;
+}
+
+#darkModeToggle:hover,
+#experimentalModeToggle:hover {
+  background-color: rgb(3, 4, 5);
+  color: rgb(242, 242, 242);
+}
+
+#about {
+  display: inline-block;
+  width: 100%;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  /* padding-left: 0.275em; */
+  border-top: 0.1em solid rgb(3, 4, 5);
+  border-bottom: 0.1em solid rgb(3, 4, 5);
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  font-size: 0.8em;
+  height: 5vh;
+}
+
+#output {
+  color: rgb(0, 30, 255);
+}
+
+.projects-container {
+  padding-top: 1vh;
+  column-count: 6;
+  column-gap: 0.3em;
+  border-radius: 0.25em;
+  display: inline-table;
+  font-size: 0.8em;
+}
+
+.projects {
+  padding-top: 1em;
+}
+
+.thumbnail {
+  font-size: 1em;
+}
+
+body.dark-mode {
+  background-color: rgb(3, 4, 5);
+  color: rgb(242, 242, 242);
+}
+
+body.dark-mode #header {
+  border-color: rgb(242, 242, 242);
+}
+
+body.dark-mode .indexTitle,
+body.dark-mode .links,
+body.dark-mode .socials,
+body.dark-mode #about,
+body.dark-mode figcaption.projectName,
+body.dark-mode figcaption.tag {
+  color: rgb(242, 242, 242);
+  border-top-color: rgb(242, 242, 242);
+  border-bottom-color: rgb(242, 242, 242);
+}
+
+body.dark-mode .socials .about {
+  border-top-color: rgb(242, 242, 242);
+  border-top-color: rgb(242, 242, 242);
+}
+
+body.dark-mode #output {
+  color: rgb(255, 0, 162);
+}
+body.dark-mode .socials svg {
+  fill: rgb(242, 242, 242);
+  color: rgb(242, 242, 242);
+}
+
+body.dark-mode #darkModeToggle,
+body.dark-mode #crazyModeToggle {
+  border: none;
+  color: rgb(242, 242, 242);
+}
+body.dark-mode #crazyModeToggle {
+  border: none;
+  color: rgb(242, 242, 242);
+}
+
+body.dark-mode #darkModeToggle:hover,
+body.dark-mode #crazyModeToggle:hover {
+  background-color: rgb(242, 242, 242);
+  color: rgb(3, 4, 5);
+}
+
+body.dark-mode a {
+  color: rgb(242, 242, 242) !important;
+}
+
+body.dark-mode a:hover,
+body.dark-mode a:active,
+body.dark-mode a:visited {
+  color: rgb(242, 242, 242) !important;
+  text-decoration: underline solid white;
+}
+
+.img-grid-archive {
+  column-count: 6;
+  column-gap: 0.3em;
+  border-radius: 0.25em;
+}
+
+#space-between-header-and-media {
+  height: 10px;
+}
+
+video.projectImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.25em;
+  object-fit: cover;
+  padding-top: 0.3em;
+}
+
+img.projectImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.25em;
+  object-fit: cover;
+  padding-top: 0.3em;
+}
+
+/* Anchor Styling */
+a {
+  padding: 0;
+  text-decoration: none;
+  color: rgb(3, 4, 5);
+}
+
+a.nav {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+a.handles {
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+}
+
+a:active,
+a:visited {
+  color: rgb(3, 4, 5);
+}
+
+a:hover {
+  text-decoration: underline solid rgb(3, 4, 5);
+}
+
+a:active {
+  text-decoration: underline solid rgb(3, 4, 5);
+}
+
+a:visited {
+  color: rgb(3, 4, 5) !important;
+  background-color: rgb(242, 242, 242);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .projects-container {
+    column-count: 4;
+  }
+  .img-grid-archive {
+    column-count: 4;
+  }
+}
+
+@media (max-width: 525) {
+  .projects-container {
+    column-count: 3;
+  }
+  .img-grid-archive {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 500px) {
+  .projects-container {
+    column-count: 2;
+  }
+  .img-grid-archive {
+    column-count: 2;
+  }
+
+  .links {
+    font-size: 4vw;
+  }
+
+  .indexTitle {
+    font-size: 4vw;
+  }
+
+  .socials {
+    font-size: 2.25vw;
+  }
+
+  .email {
+    font-size: 2.25vw;
+  }
+
+  a#copied {
+    font-size: 2.25vw;
+  }
+
+  #darkModeToggle {
+    font-size: 2.25vw;
+  }
+
+  #toggleExperimentalMode {
+    font-size: 0.5em;
+  }
+
+  #copyToClipboard {
+    font-size: 0.5em;
+  }
+
+  #about {
+    font-size: 3vw;
+  }
+
+  .projects-container {
+    font-size: 3vw;
+  }
+}
+
+body > .footer {
+  position: sticky;
+  top: 100vh;
+  font-size: 0.6em;
+}
+
+a.thumbnail img {
+  position: absolute;
+  opacity: 0;
+  width: 30%;
+  height: auto;
+  left: 60vw;
+  bottom: 5%;
+  transition: opacity 0.5s;
+}
+
+a.thumbnail:hover img {
+  opacity: 1;
+}

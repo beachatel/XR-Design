@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>beatcha</title>
+    <meta
+      name="description"
+      content="Creative technologist based in Manchester."
+    />
+
+    <link rel="shortcut icon" type="image/x-icon" href="/beatcha.ico" />
+    <link rel="stylesheet" href="src/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM Plex Mono"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="components/toggleDarkMode.js"></script>
+    <script src="components/toggleCrazyMode.js"></script>
+    <script src="components/rand-interest.js"></script>
+    <script src="components/copyToClipboard.js"></script>
+  </head>
+
+  <body>
+    <div id="header" style="position: relative; z-index: 9999">
+      <div class="indexTitle">beatcha</div>
+      <div class="links">
+        <a class="nav" href="Cache/">cache</a>
+      </div>
+      <div class="socials">
+        <a class="handles" href="https://www.instagram.com/beatcha0/"
+          >○instagram</a
+        >
+        <a class="handles" href="https://github.com/beachatel"> ○github</a>
+
+        <button
+          id="copyToClipboard"
+          onclick="(writeClipboardText(), onClick())"
+        >
+          <span class="email"> ○ bchatelbell@gmail.com</span>
+        </button>
+
+        <a id="copied">copied!</a>
+        <button id="darkModeToggle" onclick="toggleDarkMode()"></button>
+        <button id="crazyModeToggle" onclick="toggleCrazyMode()">
+          toggleCrazyMode()
+        </button>
+      </div>
+      <div id="about">
+        Creative technologist with a passion for _<span id="output"></span
+        ><br />
+      </div>
+    </div>
+
+    <div class="projects-container" id="projects-container">
+      <div class="projects">
+        <ins> Interactive Tools</ins> ○<br />
+        <a
+          id="superform"
+          href="Projects/Interactive-Tools/Super-Formula-Sub-Divider/"
+          >SuperFormulaSubdivider</a
+        ><br />
+        <a href="Projects/Interactive-Tools/Gradienter/">Gradienter</a><br />
+        <a href="Projects/Interactive-Tools/Aizawa-Attractor-Visualiser/"
+          >Aizawa Attractor Visualiser</a
+        ><br />
+        <a
+          href="Projects/Interactive-Tools/Hand-Tracking-Point-Cloud-Destruction/"
+          >Hand Tracking Point Cloud Destruction</a
+        ><br />
+        <a href="Projects/Interactive-Tools/Hand-Tracking-Ascii-Noise/"
+          >Hand Tracking Ascii Noise</a
+        ><br />
+      </div>
+      <div class="projects">
+        <ins> Visual Programming</ins> ○<br />
+        <a class="thumbnail" href="Projects/Visual-Programming/John-Glacier-VJ/"
+          >John Glacier</a
+        ><br />
+        <a class="thumbnail" href="Projects/Visual-Programming/Cobalt-Studios/"
+          >Cobalt Studios</a
+        ><br />
+      </div>
+      <div class="projects">
+        <ins> Motion</ins> ○<br />
+        <a class="thumbnail" href="Projects/Motion/John-Glacier-Motion/"
+          >John Glacier</a
+        ><br />
+        <a class="thumbnail" href="Projects/Motion/Shopayado/">Shopayado</a
+        ><br />
+        <a class="thumbnail" href="Projects/Motion/Balance-NCL/">Balance NCL</a>
+      </div>
+      <div class="projects">
+        <div class="type"><ins> Installation</ins> ○</div>
+        <a class="thumbnail" href="Projects/Installation/Nova/"
+          >Nova @ Salford Lightwaves</a
+        >
+      </div>
+    </div>
+
+    <div id="crazy-scene">
+      <div id="crazy-bg"></div>
+      <canvas id="crazy-canvas"></canvas>
+      <div id="css3d-layer"></div>
+    </div>
+
+    <div class="footer"><p>© 2026 Bea Chatel</p></div>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
