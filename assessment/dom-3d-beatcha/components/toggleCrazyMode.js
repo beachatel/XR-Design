@@ -1,180 +1,105 @@
-let PROJECTS = [
-  {
-    title: "SuperFormulaSubdivider",
-    category: "Interactive Tools",
-    url: "Projects/Interactive-Tools/Super-Formula-Sub-Divider/",
-  },
-  {
-    title: "Gradienter",
-    category: "Interactive Tools",
-    url: "Projects/Interactive-Tools/Gradienter/",
-  },
-  {
-    title: "Aizawa Attractor Visualiser",
-    category: "Interactive Tools",
-    url: "Projects/Interactive-Tools/Aizawa-Attractor-Visualiser/",
-  },
-  {
-    title: "Hand Tracking Point Cloud",
-    category: "Interactive Tools",
-    url: "Projects/Interactive-Tools/Hand-Tracking-Point-Cloud-Destruction/",
-  },
-  {
-    title: "Hand Tracking Ascii Noise",
-    category: "Interactive Tools",
-    url: "Projects/Interactive-Tools/Hand-Tracking-Ascii-Noise/",
-  },
-  {
-    title: "John Glacier",
-    category: "Visual Programming",
-    url: "Projects/Visual-Programming/John-Glacier-VJ/",
-  },
-  {
-    title: "Cobalt Studios",
-    category: "Visual Programming",
-    url: "Projects/Visual-Programming/Cobalt-Studios/",
-  },
-  {
-    title: "John Glacier",
-    category: "Motion",
-    url: "Projects/Motion/John-Glacier-Motion/",
-  },
-  {
-    title: "Shopayado",
-    category: "Motion",
-    url: "Projects/Motion/Shopayado/",
-  },
-  {
-    title: "Balance NCL",
-    category: "Motion",
-    url: "Projects/Motion/Balance-NCL/",
-  },
-  {
-    title: "Nova @ Salford Lightwaves",
-    category: "Installation",
-    url: "Projects/Installation/Nova/",
-  },
-];
-
-let on = false,
-  ready = false,
+let PROJECTS = [];
+let on,
+  ready,
+  drag,
+  moved = false,
   frame = null;
-let cam, ren, css, cards;
-let drag = false,
-  lx = 0,
-  ly = 0;
+let cam, ren, css, cards, lx, ly;
 let tRY = 0,
   rY = 0,
   tRX = 0,
   rX = 0,
   tZ = 1600,
-  z = 1600;
-let aRY = 0,
-  moved = false,
+  z = 1600,
+  aRY = 0,
   tt = 1;
 const F = [],
-  T = [],
-  lt = {};
+  T = [];
+let isClosing = false;
 
-class CSS3DObject {
-  constructor(el) {
-    this.element = el;
-    this.position = new THREE.Vector3();
-  }
+async function loadProjectData() {
+  PROJECTS = await fetch("../projects.json").then((r) => r.json());
 }
 
 class CSS3DRenderer {
-  constructor(container) {
-    this.domElement = container;
-    this.objects = [];
-  }
-  setSize(w, h) {
-    this.w = w;
-    this.h = h;
+  constructor(el) {
+    this.dom = el;
+    this.objs = [];
   }
   addObject(obj) {
-    this.objects.push(obj);
-    obj.element.style.position = "absolute";
-    obj.element.style.left = "50%";
-    obj.element.style.top = "50%";
-    obj.element.style.pointerEvents = "auto";
-    this.domElement.appendChild(obj.element);
+    Object.assign(obj.style, { position: "absolute", left: "50%", top: "50%" });
+    this.dom.appendChild(obj);
+    this.objs.push(obj);
   }
   render(cam) {
     const fov =
-      this.h / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov * 0.75)));
-    for (const obj of this.objects) {
-      const p = obj.position.clone().applyMatrix4(cam.matrixWorldInverse);
-      if (p.z > 0) {
-        obj.element.style.display = "none";
-        continue;
-      } else {
-        obj.element.style.display = "";
-      }
-      const scale = fov / -p.z;
-
-      obj.element.style.transform = `translate(-50%, -50%) translate3d(${p.x * scale}px, ${-p.y * scale}px, 0px) scale(${scale})`;
-      obj.element.style.zIndex = Math.round(-p.z);
-    }
+      this.dom.clientHeight /
+      (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
+    this.objs.forEach((el) => {
+      const p = el.pos.clone().applyMatrix4(cam.matrixWorldInverse);
+      if (p.z > 0) return (el.style.display = "none");
+      el.style.display = "";
+      const s = fov / -p.z;
+      el.style.transform = `translate(-50%,-50%) translate3d(${p.x * s}px,${-p.y * s}px,0) scale(${s})`;
+      el.style.zIndex = Math.round(-p.z);
+    });
   }
 }
 
-function _init() {
-  const W = window.innerWidth,
-    H = window.innerHeight;
-  const canvas = document.getElementById("crazy-canvas");
-  ren = new THREE.WebGLRenderer({ canvas, alpha: true });
+function init() {
+  const [W, H] = [window.innerWidth, window.innerHeight];
+  ren = new THREE.WebGLRenderer({
+    canvas: document.getElementById("crazy-canvas"),
+    alpha: true,
+  });
   ren.setSize(W, H);
   cam = new THREE.PerspectiveCamera(40, W / H, 1, 10000);
-
-  const layer = document.getElementById("css3d-layer");
-  css = new CSS3DRenderer(layer);
-  css.setSize(W, H);
-
-  const n = PROJECTS.length;
-  lt.sphere = Array.from({ length: n }, (_, i) => {
-    const phi = Math.acos(-1 + (2 * i) / n),
-      theta = Math.sqrt(n * Math.PI) * phi;
-    return { pos: new THREE.Vector3().setFromSphericalCoords(700, phi, theta) };
-  });
+  css = new CSS3DRenderer(document.getElementById("css3d-layer"));
 
   cards = PROJECTS.map((p, i) => {
     const el = document.createElement("a");
     el.className = "c3d-card";
     el.href = p.url;
     el.innerHTML = `<div class="c3d-cat">${p.category}</div><div class="c3d-title">${p.title}</div>`;
-    const obj = new CSS3DObject(el);
-    obj.position.copy(lt.sphere[i].pos);
-    css.addObject(obj);
-    F[i] = { pos: obj.position.clone() };
-    T[i] = { pos: lt.sphere[i].pos.clone() };
-    return obj;
+
+    const phi = Math.acos(-1 + (2 * i) / PROJECTS.length);
+    const theta = Math.sqrt(PROJECTS.length * Math.PI) * phi;
+
+    el.pos = new THREE.Vector3().setFromSphericalCoords(700, phi, theta);
+    css.addObject(el);
+    T[i] = el.pos.clone();
+    F[i] = new THREE.Vector3();
+    return el;
   });
 
-  const ov = document.getElementById("crazy-scene");
-  ov.addEventListener("mousedown", (e) => {
-    if (e.target.closest("button") || e.target.closest("a")) return;
-    drag = true;
-    lx = e.clientX;
-    ly = e.clientY;
-    moved = true;
-  });
-  window.addEventListener("mouseup", () => (drag = false));
-  window.addEventListener("mousemove", (e) => {
+  const scene = document.getElementById("crazy-scene");
+  scene.onmousedown = (e) => {
+    if (e.target.closest("a, button")) return;
+    drag = moved = true;
+    [lx, ly] = [e.clientX, e.clientY];
+  };
+  window.onmouseup = () => (drag = false);
+  window.onmousemove = (e) => {
     if (!drag) return;
     tRY += (e.clientX - lx) * 0.005;
     tRX += (e.clientY - ly) * 0.005;
-    lx = e.clientX;
-    ly = e.clientY;
-  });
+    [lx, ly] = [e.clientX, e.clientY];
+  };
 }
 
-function _loop() {
-  frame = requestAnimationFrame(_loop);
-  if (!moved) aRY += 0.0012;
+function loop() {
+  frame = requestAnimationFrame(loop);
+
+  if (!moved && !isClosing) aRY += 0.0012;
+
+  if (isClosing) {
+    tRY = rY = tRX = rX = 0;
+  }
+
   rY += (tRY + aRY - rY) * 0.05;
   rX = Math.max(-1.1, Math.min(1.1, rX + (tRX - rX) * 0.05));
   z += (tZ - z) * 0.07;
+
   cam.position.set(
     Math.sin(rY) * Math.cos(rX) * z,
     Math.sin(rX) * z,
@@ -185,46 +110,104 @@ function _loop() {
   cam.matrixWorldInverse.copy(cam.matrixWorld).invert();
 
   if (tt < 1) {
-    tt = Math.min(1, tt + 0.013);
-    cards.forEach((obj, i) => obj.position.lerpVectors(F[i].pos, T[i].pos, tt));
+    tt = Math.min(1, tt + 0.025);
+    cards.forEach((el, i) => el.pos.lerpVectors(F[i], T[i], tt));
+
+    if (tt >= 1 && isClosing) {
+      exitScene();
+    }
   }
+
   css.render(cam);
 }
 
-window.crazy3DToggle = function () {
-  on = !on;
-  const ov = document.getElementById("crazy-scene");
-  const proj = document.getElementById("projects-container");
+function exitScene() {
+  on = false;
+  isClosing = false;
+  const container = document.getElementById("projects-container");
+  const scene = document.getElementById("crazy-scene");
 
-  if (on) {
+  document.body.classList.remove("crazy-mode-active");
+  container.style.visibility = "visible";
+  scene.classList.remove("active");
+
+  if (frame) {
+    cancelAnimationFrame(frame);
+    frame = null;
+  }
+
+  cards.forEach((el, i) => {
+    const phi = Math.acos(-1 + (2 * i) / PROJECTS.length);
+    const theta = Math.sqrt(PROJECTS.length * Math.PI) * phi;
+    T[i].setFromSphericalCoords(700, phi, theta);
+  });
+}
+
+window.toggleCrazyMode = async function () {
+  const container = document.getElementById("projects-container");
+  const scene = document.getElementById("crazy-scene");
+  const btn = document.getElementById("crazyModeToggle");
+
+  const W = window.innerWidth,
+    H = window.innerHeight;
+
+  if (!on) {
+    on = true;
+    if (PROJECTS.length === 0) await loadProjectData();
     if (!ready) {
-      _init();
+      init();
       ready = true;
     }
-    proj.style.visibility = "hidden";
-    ov.classList.add("active");
-    if (!frame) _loop();
+
+    tRY = rY = tRX = rX = aRY = 0;
+    z = tZ;
+    moved = false;
+    tt = 0;
+    isClosing = false;
+
+    cam.position.set(0, 0, z);
+    cam.lookAt(0, 0, 0);
+    cam.updateMatrixWorld();
+
+    const vFOV = THREE.MathUtils.degToRad(cam.fov);
+    const visibleHeightAtOrigin = 2 * Math.tan(vFOV / 2) * z;
+    const pixelToUnit = visibleHeightAtOrigin / H;
+
+    const staticLinks = document.querySelectorAll(
+      "#projects-container .projects a",
+    );
+
+    cards.forEach((el, i) => {
+      let startX = 0,
+        startY = 0;
+
+      const domLink = staticLinks[i];
+      if (domLink) {
+        const rect = domLink.getBoundingClientRect();
+
+        const screenCenterX = rect.left + rect.width / 2 - W / 2;
+        const screenCenterY = rect.top + rect.height / 2 - H / 2;
+
+        startX = screenCenterX * pixelToUnit;
+        startY = -screenCenterY * pixelToUnit;
+      }
+
+      F[i].set(startX, startY, 0);
+      el.pos.copy(F[i]);
+    });
+
+    document.body.classList.add("crazy-mode-active");
+    btn.textContent = "toggleNormalMode()";
+    container.style.visibility = "hidden";
+    scene.classList.add("active");
+    if (!frame) loop();
   } else {
-    ov.classList.remove("active");
-    proj.style.visibility = "visible";
-    if (frame) {
-      cancelAnimationFrame(frame);
-      frame = null;
-    }
+    isClosing = true;
+    tt = 0;
+    cards.forEach((el, i) => {
+      T[i].copy(F[i]);
+      F[i].copy(el.pos);
+    });
+    btn.textContent = "toggleCrazyMode()";
   }
 };
-
-window.toggleCrazyMode = function () {
-  const body = document.body;
-  const button = document.getElementById("crazyModeToggle");
-  body.classList.toggle("dark-mode");
-  button.textContent = body.classList.contains("dark-mode")
-    ? "toggleNormalMode()"
-    : "toggleCrazyMode()";
-  crazy3DToggle();
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("crazyModeToggle");
-  if (btn) btn.textContent = "toggleCrazyMode()";
-});
