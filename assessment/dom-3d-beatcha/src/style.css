@@ -1,4 +1,7 @@
-/* Ensure header is ALWAYS on top of the 3D scene */
+/* * {
+  background-color: rgb(255, 1, 81);
+} */
+
 #header {
   position: relative;
   z-index: 9999;
@@ -11,15 +14,13 @@
   pointer-events: auto;
 }
 
-/* The 3D Overlay */
 #crazy-scene {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 10vh;
   width: 100vw;
   height: 100vh;
-  z-index: 100; /* Lower than header */
-  pointer-events: none; /* Let clicks pass through empty space to header */
+  z-index: 100;
+  pointer-events: none;
   display: none;
 }
 
@@ -34,13 +35,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Let clicks pass through to toggle button */
+  pointer-events: none;
 }
 
 .c3d-card {
-  pointer-events: auto; /* Re-enable clicks for actual project cards */
+  pointer-events: auto;
   text-decoration: none;
-  color: inherit;
+  font-size: 2vw;
 }
 
 * {
@@ -245,7 +246,6 @@ img.projectImg {
   padding-top: 0.3em;
 }
 
-/* Anchor Styling */
 a {
   padding: 0;
   text-decoration: none;
@@ -280,7 +280,6 @@ a:visited {
   background-color: rgb(242, 242, 242);
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .projects-container {
     column-count: 4;
