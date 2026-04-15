@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 *.gif
+
+assets/
+process/
+three-grass-demo/
+wilderness/
