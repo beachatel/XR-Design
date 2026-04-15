@@ -27,20 +27,27 @@ class CSS3DRenderer {
     this.objs = [];
   }
   addObject(obj) {
-    Object.assign(obj.style, { position: "absolute", left: "50%", top: "50%" });
+    Object.assign(obj.style, {
+      position: "absolute",
+      left: "50%",
+      top: "40%",
+      backgroundColor: "black",
+      color: "white",
+    });
     this.dom.appendChild(obj);
     this.objs.push(obj);
   }
+
   render(cam) {
     const fov =
       this.dom.clientHeight /
-      (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
+      (3.1 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
     this.objs.forEach((el) => {
       const p = el.pos.clone().applyMatrix4(cam.matrixWorldInverse);
       if (p.z > 0) return (el.style.display = "none");
       el.style.display = "";
       const s = fov / -p.z;
-      el.style.transform = `translate(-50%,-50%) translate3d(${p.x * s}px,${-p.y * s}px,0) scale(${s})`;
+      el.style.transform = `translate(-50%,-50%) translate3d(${p.x * 1.75 * s}px,${-p.y * s}px,0) scale(${s})`;
       el.style.zIndex = Math.round(-p.z);
     });
   }
